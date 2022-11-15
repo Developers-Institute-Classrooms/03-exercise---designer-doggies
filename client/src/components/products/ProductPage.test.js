@@ -34,27 +34,21 @@ describe("ProductPage", () => {
   test("WHEN the user changes the sort order of the products page THEN the order of dogs will change appropriately", async () => {
     setup();
 
-    const products1 = productsPageOneMock.products;
     await waitFor(() => {
-      products1.forEach(product => {
         expect(
-          screen.getByText(product.name)
+          screen.getByText("Angel Wings Harness")
         ).toBeInTheDocument();
-      })
     });
 
     userEvent.selectOptions(
       screen.getByRole('combobox', { name: "Sort" }),
       screen.getByRole('option', {name: 'Description'}),
     );
-    const products2 = productsPageTwoMock.products;
 
     await waitFor(() => {
-      products2.forEach(product => {
         expect(
-          screen.getByText(product.name)
+          screen.getByText("Deluxe Carry Bag Orange")
         ).toBeInTheDocument();
-      })
     });
   })
 });

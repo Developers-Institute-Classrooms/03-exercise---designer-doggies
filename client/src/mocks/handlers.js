@@ -1,6 +1,6 @@
 import { rest } from "msw";
 
-const productsPageOneMock = {
+export const productsPageOneMock = {
   products: [
     {
       id: 1,
@@ -11,18 +11,16 @@ const productsPageOneMock = {
       discountAmount: "$1.00",
       categoryName: "Costumes",
       imageName: "dog-photo_0000.jpg",
-      imageDescription: "Wings harness",
-      discountValue: null,
-      discountType: null,
-    },
+      imageDescription: "Wings harness"
+    }
   ],
   currentPage: 1,
-  totalPages: 2,
-  itemsPerPage: 1,
+  totalPages: 1,
+  itemsPerPage: 2,
   totalItems: 2,
 };
 
-const productsPageTwoMock = {
+export const productsPageTwoMock = {
   products: [
     {
       id: 2,
@@ -32,18 +30,16 @@ const productsPageTwoMock = {
       discountAmount: "$5.00",
       categoryName: "Accessories",
       imageName: "dog-photo_0001.jpg",
-      imageDescription: "Deluxe Carry Bag Orange",
-      discountValue: 1,
-      discountType: "fixed amount off",
-    },
+      imageDescription: "Deluxe Carry Bag Orange"
+    }
   ],
   currentPage: 2,
   totalPages: 2,
-  itemsPerPage: 1,
+  itemsPerPage: 2,
   totalItems: 2,
 };
 
-const reportsMock = {
+export const reportsMock = {
   categoryReport: [
     {
       categoryName: "Accessories",
@@ -62,13 +58,17 @@ const reportsMock = {
 export const handlers = [
   rest.get(`${process.env.REACT_APP_API_URL}/products`, (req, res, ctx) => {
     const query = req.url.searchParams;
-    const limit = query.get("limit");
-    const page = query.get("page");
-    if (!(limit && page) || page === "1") {
+    const sortOrder = query.get("sortOrder");
+    const direction = query.get("direction");
+    // http://localhost:5001/api/products?sortOrder=id&direction=asc
+    if (sortOrder === "id" && direction === "asc") {
       return res(ctx.json(productsPageOneMock));
-    } else {
+    }
+    // http://localhost:5001/api/products?sortOrder=description&direction=asc
+    if (sortOrder === "description" && direction === "asc") {
       return res(ctx.json(productsPageTwoMock));
     }
+    return res(ctx.json(productsPageOneMock));
   }),
   rest.get(`${process.env.REACT_APP_API_URL}/reports`, (req, res, ctx) => {
     return res(ctx.json(reportsMock));
